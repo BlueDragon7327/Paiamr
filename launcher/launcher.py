@@ -16,14 +16,16 @@ import ctypes
 import webbrowser
 
 # put this near the top with other globals
-CURRENT_VERSION = "2.0"  # <-- bump this when you release
+CURRENT_VERSION = "2.1"  # <-- bump this when you release
 def add_exclusions_for_photoshop():
     """
     Adds Windows Firewall rules to block all inbound/outbound connections
     for Paiamr Photoshop if they don't already exist.
     """
     rule_name = "Paiamr Photoshop"
-    exe_path = r"C:\Users\aarda\AppData\Roaming\Paiamr\Products\Photoshop\Photoshop.exe"
+    # Use dynamic APPDATA path instead of hardcoded user path
+    appdata = os.getenv('APPDATA')
+    exe_path = os.path.join(appdata, "Paiamr", "Products", "Photoshop", "Photoshop.exe")
 
     def rule_exists(direction):
         cmd = f'netsh advfirewall firewall show rule name="{rule_name}" dir={direction}'
@@ -71,7 +73,9 @@ def add_exclusions_for_premiere_pro():
     for Paiamr Premiere Pro if they don't already exist.
     """
     rule_name = "Paiamr Premiere Pro"
-    exe_path = r"C:\Users\aarda\AppData\Roaming\Paiamr\Products\Premiere Pro\Adobe Premiere Pro.exe"
+    # Use dynamic APPDATA path instead of hardcoded user path
+    appdata = os.getenv('APPDATA')
+    exe_path = os.path.join(appdata, "Paiamr", "Products", "Premiere Pro", "Adobe Premiere Pro.exe")
 
     def rule_exists(direction):
         cmd = f'netsh advfirewall firewall show rule name="{rule_name}" dir={direction}'
@@ -95,8 +99,7 @@ def remove_exclusions_for_premiere_pro():
     Removes the Windows Firewall rules for Paiamr Premiere Pro (both inbound and outbound).
     """
     rule_name = "Paiamr Premiere Pro"
-    exe_path = r"C:\Users\aarda\AppData\Roaming\Paiamr\Products\Premiere Pro\Adobe Premiere Pro.exe"
-
+    
     def rule_exists(direction):
         cmd = f'netsh advfirewall firewall show rule name="{rule_name}" dir={direction}'
         result = subprocess.run(shlex.split(cmd), capture_output=True, text=True)
@@ -114,6 +117,57 @@ def remove_exclusions_for_premiere_pro():
             print(f"{Fore.CYAN}[=] {d}bound rule not found{Style.RESET_ALL}")
 
     print(f"{Fore.CYAN}Premiere Pro firewall rules removed/done.{Style.RESET_ALL}")
+
+def add_exclusions_for_after_effects():
+    """
+    Adds Windows Firewall rules to block all inbound/outbound connections
+    for Paiamr After Effects if they don't already exist.
+    """
+    rule_name = "Paiamr After Effects"
+    # Use dynamic APPDATA path instead of hardcoded user path
+    appdata = os.getenv('APPDATA')
+    exe_path = os.path.join(appdata, "Paiamr", "Products", "After Effects", "AfterFX.exe")
+
+    def rule_exists(direction):
+        cmd = f'netsh advfirewall firewall show rule name="{rule_name}" dir={direction}'
+        result = subprocess.run(shlex.split(cmd), capture_output=True, text=True)
+        return rule_name.lower() in result.stdout.lower()
+
+    def create_rule(direction):
+        cmd = f'netsh advfirewall firewall add rule name="{rule_name}" dir={direction} action=block program="{exe_path}" enable=yes'
+        subprocess.run(shlex.split(cmd), check=True)
+
+    for d in ("in", "out"):
+        if not rule_exists(d):
+            print(f"{Fore.GREEN}[+] Creating {d}bound rule for After Effects{Style.RESET_ALL}")
+            create_rule(d)
+        else:
+            print(f"{Fore.YELLOW}[=] {d}bound rule already exists{Style.RESET_ALL}")
+
+    print(f"{Fore.CYAN}After Effects firewall exclusions checked/done.{Style.RESET_ALL}")
+def remove_exclusions_for_after_effects():
+    """
+    Removes the Windows Firewall rules for Paiamr After Effects (both inbound and outbound).
+    """
+    rule_name = "Paiamr After Effects"
+
+    def rule_exists(direction):
+        cmd = f'netsh advfirewall firewall show rule name="{rule_name}" dir={direction}'
+        result = subprocess.run(shlex.split(cmd), capture_output=True, text=True)
+        return rule_name.lower() in result.stdout.lower()
+
+    def delete_rule(direction):
+        cmd = f'netsh advfirewall firewall delete rule name="{rule_name}" dir={direction}'
+        subprocess.run(shlex.split(cmd), check=True)
+
+    for d in ("in", "out"):
+        if rule_exists(d):
+            print(f"{Fore.YELLOW}[-] Removing {d}bound rule for After Effects{Style.RESET_ALL}")
+            delete_rule(d)
+        else:
+            print(f"{Fore.CYAN}[=] {d}bound rule not found{Style.RESET_ALL}")
+
+    print(f"{Fore.CYAN}After Effects firewall rules removed/done.{Style.RESET_ALL}")
 
 
 def check_for_update():
@@ -170,8 +224,8 @@ def print_ascii_art():
         f"{Fore.YELLOW}\\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\ \\  \\|\\  \\ \\  \\\\__\\ \\  \\ \\  \\|\\  \\   {Style.RESET_ALL}\n"
         f"{Fore.GREEN} \\ \\   ____\\ \\   __  \\ \\  \\ \\   __  \\ \\  \\\\|__| \\  \\ \\   _  _\\  {Style.RESET_ALL}\n"
         f"{Fore.CYAN}  \\ \\  \\___|\\ \\  \\ \\  \\ \\  \\ \\  \\ \\  \\ \\  \\    \\ \\  \\ \\  \\\\  \\| {Style.RESET_ALL}\n"
-        f"{Fore.BLUE}   \\ \\__\\    \\ \\__\\ \\__\\ \\__\\ \\__\\ \\__\\ \\__\\    \\ \\__\\ \\__\\\\ _\\ {Style.RESET_ALL}\n"
-        f"{Fore.MAGENTA}    \\|__|     \\|__|\\|__|\\|__|\\|__|\\|__|\\|__|     \\|__|\\|__|\\|__|{Style.RESET_ALL}\n"
+        f"{Fore.BLUE}   \\ \\__\\    \\ \\__\\ \\__\\ \\__\\    \\ \\__\\ \\__\\\\ _\\ {Style.RESET_ALL}\n"
+        f"{Fore.MAGENTA}    \\|__|     \\|__|\\|__|\\|__|\\|__|\\|__|     \\|__|\\|__|\\|__|{Style.RESET_ALL}\n"
     )
     print(ascii_art)
 
@@ -220,6 +274,7 @@ def get_products_status():
     products_dir = os.path.join(appdata, "Paiamr", "Products")
     photoshop_dir = os.path.join(products_dir, "Photoshop")
     premiere_dir = os.path.join(products_dir, "Premiere Pro")
+    after_effects_dir = os.path.join(products_dir, "After Effects")
     installed = []
     available = []
 
@@ -238,6 +293,12 @@ def get_products_status():
         installed.append("Premiere Pro")
     else:
         available.append("Premiere Pro")
+
+    # Check After Effects
+    if os.path.exists(after_effects_dir):
+        installed.append("After Effects")
+    else:
+        available.append("After Effects")
 
     return available, installed
 
@@ -403,6 +464,39 @@ def install_product(product_name):
         else:
             print(f"{Fore.RED}Failed to find Adobe Premiere Pro.exe after extraction.{Style.RESET_ALL}")
             time.sleep(2)
+    elif product_name == "After Effects":
+        # URLs for both parts
+        part_urls = [
+            "https://github.com/BlueDragon7327/Paiamr/releases/latest/download/aftereffectspart1.zip",
+            "https://github.com/BlueDragon7327/Paiamr/releases/latest/download/aftereffectspart2.zip"
+        ]
+        temp_dir = tempfile.gettempdir()
+        part_files = [
+            os.path.join(temp_dir, "aftereffectspart1.zip"),
+            os.path.join(temp_dir, "aftereffectspart2.zip")
+        ]
+        # Download both parts
+        for url, part_file in zip(part_urls, part_files):
+            print(f"{Fore.YELLOW}Starting download for {os.path.basename(part_file)}...{Style.RESET_ALL}")
+            download_with_progress(url, part_file)
+        # Extract both parts
+        for part_file in part_files:
+            print(f"{Fore.CYAN}Extracting {os.path.basename(part_file)}...{Style.RESET_ALL}")
+            extract_with_progress(part_file, product_dir)
+            os.remove(part_file)
+        exe_path = os.path.join(product_dir, "AfterFX.exe")
+        if os.path.exists(exe_path):
+            add_exclusions_for_after_effects()
+            print(f"{Fore.GREEN}Firewall bypass added for After Effects.{Style.RESET_ALL}")
+            create_start_menu_shortcut(product_name, exe_path)
+            print(f"{Fore.GREEN}Launching {product_name}...{Style.RESET_ALL}")
+            subprocess.Popen([exe_path], shell=True)
+            print(f"{Fore.GREEN}{product_name} launched. Exiting Paiamr...{Style.RESET_ALL}")
+            time.sleep(1)
+            os._exit(0)
+        else:
+            print(f"{Fore.RED}Failed to find AfterFX.exe after extraction.{Style.RESET_ALL}")
+            time.sleep(2)
     else:
         print(f"{Fore.YELLOW}{product_name} is already installed or unknown product.{Style.RESET_ALL}")
         time.sleep(2)
@@ -417,6 +511,8 @@ def uninstall_product(product_name):
         remove_exclusions_for_photoshop()  # prints its own messages
     elif product_name == "Premiere Pro":
         remove_exclusions_for_premiere_pro()  # prints its own messages
+    elif product_name == "After Effects":
+        remove_exclusions_for_after_effects()  # prints its own messages
 
     # Delete shortcut if on Windows
     if os.name == 'nt':
@@ -490,6 +586,9 @@ def show_launch_products_menu():
                 elif product == "Premiere Pro":
                     exe_path = os.path.join(appdata, "Paiamr", "Products", "Premiere Pro", "Premiere Pro.exe")
                     exe_name = "Premiere Pro.exe"
+                elif product == "After Effects":
+                    exe_path = os.path.join(appdata, "Paiamr", "Products", "After Effects", "AfterFX.exe")
+                    exe_name = "AfterFX.exe"
                 else:
                     print(f"{Fore.YELLOW}Launching {product} (functionality to be implemented){Style.RESET_ALL}")
                     time.sleep(2)
