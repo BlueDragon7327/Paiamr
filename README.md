@@ -2,3 +2,6 @@
 ### download [here](https://github.com/BlueDragon7327/Paiamr/releases/latest/download/Paiamr.Launcher.exe), then just follow the steps it tells u idk
 
 ### oh yeah after u install the product u want just search & launch it from the Windows Start Menu.
+
+
+## If you want other apps it is recommend to use the patcher
