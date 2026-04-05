@@ -30,3 +30,5 @@ how 2 use patcher no virus legit tested 2026 no 🐀:
 13. make an inbound & outbound rule blocking the connection to the .exe
 14. ALWAYS LAUNCH THRU START MENU
 15. enjoy papies
+
+yt video soon
