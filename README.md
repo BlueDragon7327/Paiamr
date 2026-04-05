@@ -15,7 +15,7 @@ paiamr = pirating adobe is always morally right
 
 how 2 use patcher no virus legit tested 2026 no 🐀:
 
-1. download it from releases
+1. [download](https://github.com/BlueDragon7327/Paiamr/releases/latest/download/PaiamrPATCHER.exe) the patcher
 2. download creative cloud
 3. close creative cloud
 4. run patcher
