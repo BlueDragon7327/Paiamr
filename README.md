@@ -7,7 +7,7 @@ dis is de adobie cracker
 
 ## THE LAUNCHER IS BUGGY, DONT USE IT, INSTEAD DOWNLOAD THE PATCHER
 
-### enjoy my fellow criminals ❤️
+### enjoy fellas ❤️
 
 
 paiamr = pirating adobe is always morally right
@@ -29,6 +29,6 @@ how 2 use patcher no virus legit tested 2026 no 🐀:
 12. go to firewall
 13. make an inbound & outbound rule blocking the connection to the .exe
 14. ALWAYS LAUNCH THRU START MENU
-15. enjoy papies
+
 
 yt video soon
