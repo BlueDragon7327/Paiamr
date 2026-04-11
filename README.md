@@ -31,4 +31,4 @@ how 2 use patcher no virus legit tested 2026 no 🐀:
 14. ALWAYS LAUNCH THRU START MENU
 
 
-yt video soon
+if u cant read heres a [tutorial](https://www.youtube.com/watch?v=2LG9grbL9TY&t=2s)
